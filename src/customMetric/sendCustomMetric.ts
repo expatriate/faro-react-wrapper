@@ -7,12 +7,14 @@ function constructMetricContext({
   status,
   result,
   type,
+  value,
   buckets,
 }: Omit<CustomMetricBase, 'timestamp' | 'name'>): Record<string, string> {
   const context: Record<string, string> = {
     'measurement.description': description,
     'measurement.unit': unit,
     'measurement.metric.type': type,
+    'measurement.value': value.toString(),
   };
 
   if (status) {
