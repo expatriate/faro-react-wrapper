@@ -11,6 +11,7 @@ function constructMetricContext({
   buckets,
 }: Omit<CustomMetricBase, 'timestamp' | 'name'>): Record<string, string> {
   const context: Record<string, string> = {
+    'measurement.type': 'custom',
     'measurement.description': description,
     'measurement.unit': unit,
     'measurement.metric.type': type,
