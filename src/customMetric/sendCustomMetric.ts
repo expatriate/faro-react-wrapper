@@ -7,15 +7,12 @@ function constructMetricContext({
   status,
   result,
   type,
-  value,
   buckets,
-}: Omit<CustomMetricBase, 'timestamp' | 'name'>): Record<string, string> {
+}: Omit<CustomMetricBase, 'timestamp' | 'name' | 'value'>): Record<string, string> {
   const context: Record<string, string> = {
-    'measurement.type': 'custom',
     'measurement.description': description,
     'measurement.unit': unit,
     'measurement.metric.type': type,
-    'measurement.value': value.toString(),
   };
 
   if (status) {
@@ -33,7 +30,7 @@ function constructMetricContext({
   return context;
 }
 
-export function sendCustomMetric({ name, timestamp, ...rest }: CustomMetricBase) {
+export function sendCustomMetric({ name, value, ...rest }: CustomMetricBase) {
   const faroInstance = getFaroInstance();
 
   const context = constructMetricContext(rest);
@@ -41,9 +38,9 @@ export function sendCustomMetric({ name, timestamp, ...rest }: CustomMetricBase)
   if (faroInstance) {
     faroInstance.api.pushMeasurement(
       {
-        type: 'internal_framework_measurements',
+        type: 'custom',
         values: {
-          [name]: timestamp,
+          [name]: Number(value),
         },
       },
       {
