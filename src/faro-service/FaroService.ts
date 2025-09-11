@@ -8,15 +8,19 @@ import {
   TransportItem,
 } from '@grafana/faro-react';
 import { OtlpHttpTransport } from '@grafana/faro-transport-otlp-http';
-import { sanitizeUrl } from '../utils/helpers.ts';
+import { sanitizeEventUrlParams, sanitizePageUrlParams } from '../utils/satinizers.ts';
 
 interface FaroConfig {
   faroUrl: string;
   faroKey: string;
 }
 
+type Sanitizer = (beacon: Record<string, any>) => Record<string, any>;
+
 export class FaroService {
   private instance: Faro | null = null;
+  private sanitizers = [sanitizePageUrlParams, sanitizeEventUrlParams];
+
   private _isInitialized = false;
 
   init({
@@ -50,11 +54,15 @@ export class FaroService {
       ],
 
       beforeSend: (beacon) => {
-        if (beacon.meta?.page?.url) {
-          beacon.meta.page.url = sanitizeUrl(beacon.meta.page.url);
-        }
+        if (!this.sanitizers?.length) return beforeSend?.(beacon) ?? beacon;
 
-        return beforeSend?.(beacon) ?? beacon;
+        let beaconData: any = { ...beacon };
+
+        this.sanitizers?.forEach((el) => {
+          beaconData = { ...el(beaconData) };
+        });
+
+        return beforeSend?.(beaconData) ?? beaconData;
       },
 
       ...rest,
@@ -63,6 +71,11 @@ export class FaroService {
     this._isInitialized = true;
 
     return this.instance;
+  }
+
+  addSanitizer(sanitizer: Sanitizer | Sanitizer[]) {
+    const newSanitizers = Array.isArray(sanitizer) ? sanitizer : [sanitizer];
+    this.sanitizers = [...this.sanitizers, ...newSanitizers];
   }
 
   get isInitialized() {
@@ -102,6 +115,7 @@ export class FaroService {
     if (this.instance) {
       this.instance = null;
       this._isInitialized = false;
+      this.sanitizers = [];
     }
   }
 }

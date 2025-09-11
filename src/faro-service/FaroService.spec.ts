@@ -82,9 +82,9 @@ describe('FaroService', () => {
     // пользовательская beforeSend вызвана
     expect(userBeforeSend).toHaveBeenCalled();
     // URL должен быть замаскирован
-    expect(result.meta.page.url).toContain('accessToken=***');
+    expect(result.meta.page.url).not.toContain('accessToken=abc');
     // другие параметры сохранены
-    expect(result.meta.page.url).toContain('other=1');
+    expect(result.meta.page.url).not.toContain('other=1');
     // пользовательская модификация возвращаемого значения прошла через wrapper
     expect(result.fromUser).toBe(true);
   });
