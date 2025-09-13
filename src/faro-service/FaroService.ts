@@ -8,7 +8,11 @@ import {
   TransportItem,
 } from '@grafana/faro-react';
 import { OtlpHttpTransport } from '@grafana/faro-transport-otlp-http';
-import { sanitizeEventUrlParams, sanitizePageUrlParams } from '../utils/satinizers.ts';
+import {
+  sanitizeContextLabelsValues,
+  sanitizeEventUrlParams,
+  sanitizePageUrlParams,
+} from '../utils/satinizers.ts';
 
 interface FaroConfig {
   faroUrl: string;
@@ -19,7 +23,7 @@ type Sanitizer = (beacon: Record<string, any>) => Record<string, any>;
 
 export class FaroService {
   private instance: Faro | null = null;
-  private sanitizers = [sanitizePageUrlParams, sanitizeEventUrlParams];
+  private sanitizers = [sanitizePageUrlParams, sanitizeEventUrlParams, sanitizeContextLabelsValues];
 
   private _isInitialized = false;
 

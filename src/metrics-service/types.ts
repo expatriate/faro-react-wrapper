@@ -21,7 +21,7 @@ export type MetricUnit =
   | 'EVENTS'
   | 'UNITLESS';
 
-export type MetricLabel = Record<string, string>;
+export type MetricLabel = Record<string, string | Record<string, string>>;
 
 export type MetricType = 'histogram' | 'counter' | 'gauge';
 

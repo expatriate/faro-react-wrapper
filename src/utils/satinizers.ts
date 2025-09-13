@@ -27,19 +27,55 @@ export function sanitizeUrl(input: string): string {
 }
 
 export function sanitizePageUrlParams(beacon: Record<string, any>): Record<string, any> {
-  if (beacon.meta?.page?.url) {
-    beacon.meta.page.url = sanitizeUrl(beacon.meta.page.url);
-  }
+  if (!beacon.meta?.page?.url) return { ...beacon };
 
-  return beacon;
+  return {
+    ...beacon,
+    meta: {
+      ...beacon.meta,
+      page: {
+        ...beacon.meta.page,
+        url: sanitizeUrl(beacon.meta.page.url),
+      },
+    },
+  };
 }
 
 export function sanitizeEventUrlParams(beacon: Record<string, any>): Record<string, any> {
-  if (beacon.type === 'event') {
-    if (beacon.payload?.name === 'faro.performance.resource' && beacon.payload.attributes?.name) {
-      beacon.payload.attributes.name = sanitizeUrl(beacon.payload?.attributes.name);
-    }
-  }
+  if (beacon.type !== 'event') return { ...beacon };
+  if (beacon.payload?.name !== 'faro.performance.resource') return { ...beacon };
+  if (!beacon.payload.attributes?.name) return { ...beacon };
 
-  return beacon;
+  return {
+    ...beacon,
+    payload: {
+      ...beacon.payload,
+      attributes: {
+        ...beacon.payload.attributes,
+        name: sanitizeUrl(beacon.payload.attributes.name),
+      },
+    },
+  };
+}
+
+export function sanitizeContextLabelsValues(beacon: Record<string, any>): Record<string, any> {
+  if (beacon.type !== 'measurement') return { ...beacon };
+  if (beacon.payload?.type !== 'custom') return { ...beacon };
+  if (!beacon.payload.context?.['measurement.labels']) return { ...beacon };
+
+  try {
+    const labels = JSON.parse(beacon.payload.context['measurement.labels']);
+    return {
+      ...beacon,
+      payload: {
+        ...beacon.payload,
+        context: {
+          ...beacon.payload.context,
+          'measurement.labels': labels,
+        },
+      },
+    };
+  } catch {
+    return { ...beacon };
+  }
 }

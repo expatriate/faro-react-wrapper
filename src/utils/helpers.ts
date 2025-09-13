@@ -23,9 +23,9 @@ export function safeNumberConversion(value: unknown): number {
   return num;
 }
 
-export function safeStringifyLabels(labels: unknown): string {
+export function safeStringifyBuckets(buckets: unknown): string {
   try {
-    return JSON.stringify(labels);
+    return JSON.stringify(buckets);
   } catch {
     return '[]';
   }
