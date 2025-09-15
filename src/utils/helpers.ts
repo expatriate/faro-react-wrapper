@@ -22,11 +22,3 @@ export function safeNumberConversion(value: unknown): number {
   }
   return num;
 }
-
-export function safeStringifyBuckets(buckets: unknown): string {
-  try {
-    return JSON.stringify(buckets);
-  } catch {
-    return '[]';
-  }
-}

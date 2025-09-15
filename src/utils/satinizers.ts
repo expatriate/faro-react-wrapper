@@ -5,7 +5,7 @@ export function sanitizeUrl(input: string): string {
     let pathname = url.pathname;
 
     const replacers: { regex: RegExp; replace: string }[] = [
-      // UUID v4/v1/etc
+      // UUID
       {
         regex: /\b[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[089ab][0-9a-f]{3}-[0-9a-f]{12}\b/gi,
         replace: ':id',
@@ -14,13 +14,17 @@ export function sanitizeUrl(input: string): string {
       { regex: /\b[0-9a-f]{12,}\b/gi, replace: ':id' },
       // числовые id
       { regex: /\b\d{6,}\b/g, replace: ':id' },
+      {
+        regex: /\b[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}[a-z0-9]+\b/g,
+        replace: ':id',
+      },
     ];
 
     replacers.forEach(({ regex, replace }) => {
-      pathname = pathname.replace(regex, replace);
+      pathname = pathname.toLowerCase().replace(regex, replace);
     });
 
-    return url.origin + pathname;
+    return url.host + pathname;
   } catch {
     return input;
   }

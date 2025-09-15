@@ -1,4 +1,3 @@
-import { safeStringifyBuckets } from '../../utils/helpers.ts';
 import { CustomMetricBase, MEASUREMENT_KEYS } from '../types.ts';
 
 export function constructMetricContext({
@@ -17,6 +16,6 @@ export function constructMetricContext({
     ...(labels && { [MEASUREMENT_KEYS.LABELS]: labels }),
     ...(status && { [MEASUREMENT_KEYS.STATUS]: status }),
     ...(result && { [MEASUREMENT_KEYS.RESULT]: result }),
-    ...(buckets && { [MEASUREMENT_KEYS.BUCKETS]: safeStringifyBuckets(buckets) }),
+    ...(buckets && { [MEASUREMENT_KEYS.BUCKETS]: buckets.toString() }),
   };
 }

@@ -5,25 +5,32 @@ describe('satinizers', () => {
     test('replaces UUID in pathname with :id', () => {
       const input = 'https://example.com/users/550e8400-e29b-41d4-a716-446655440000/profile';
       const out = sanitizeUrl(input);
-      expect(out).toBe('https://example.com/users/:id/profile');
+      expect(out).toBe('example.com/users/:id/profile');
     });
 
     test('replaces long hex segment with :id', () => {
       const input = 'https://example.com/a/abcdef1234567890abcd/details';
       const out = sanitizeUrl(input);
-      expect(out).toBe('https://example.com/a/:id/details');
+      expect(out).toBe('example.com/a/:id/details');
+    });
+
+    test('replaces long hex segment with :id', () => {
+      const input =
+        'https://gc.scr.example.com/7D8B79A2-8974-4D7B-A76A-F4F29624C06BG6MNX6kL4JtpdxZ5jiaI0mN7eaEgCFoWTvXyQdZxbdDUiNG1HJQmKbln2UffnDXQhKwYxkpEXS0j4nr6b990yg/init';
+      const out = sanitizeUrl(input);
+      expect(out).toBe('gc.scr.example.com/:id/init');
     });
 
     test('replaces long numeric id with :id and strips query/hash', () => {
       const input = 'https://example.com/item/1234567?token=abc#frag';
       const out = sanitizeUrl(input);
-      expect(out).toBe('https://example.com/item/:id');
+      expect(out).toBe('example.com/item/:id');
     });
 
     test('preserves filename extension when numeric id inside filename', () => {
       const input = 'https://cdn.example.com/assets/1234567.png';
       const out = sanitizeUrl(input);
-      expect(out).toBe('https://cdn.example.com/assets/:id.png');
+      expect(out).toBe('cdn.example.com/assets/:id.png');
     });
 
     test('returns original input for invalid URL', () => {
@@ -39,7 +46,7 @@ describe('satinizers', () => {
         other: 1,
       };
       const out = sanitizePageUrlParams(beacon);
-      expect(out.meta.page.url).toBe('https://example.com/users/:id');
+      expect(out.meta.page.url).toBe('example.com/users/:id');
       // ensure other properties preserved
       expect(out.other).toBe(1);
     });
@@ -61,7 +68,7 @@ describe('satinizers', () => {
         },
       };
       const out = sanitizeEventUrlParams(beacon);
-      expect(out.payload.attributes.name).toBe('https://cdn.example.com/assets/:id.png');
+      expect(out.payload.attributes.name).toBe('cdn.example.com/assets/:id.png');
     });
 
     test('does not change other events', () => {
