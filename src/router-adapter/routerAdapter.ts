@@ -15,13 +15,14 @@ export type ReactIntegrationSettings = {
 export function getRouterAdapter(
   version: RouterMajorVersion,
   history?: ReactRouterHistory,
+  route?: any,
 ): ReactIntegrationSettings {
   switch (version) {
     case 4:
-      if (history) return initAdapterV4(history);
+      if (history) return initAdapterV4(history, route);
       throw new Error(`Router adapter need history to initialize`);
     case 5:
-      if (history) return initAdapterV5(history);
+      if (history) return initAdapterV5(history, route);
       throw new Error(`Router adapter need history to initialize`);
     case 6:
       return initAdapterV6();

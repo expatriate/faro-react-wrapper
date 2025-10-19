@@ -3,10 +3,9 @@ import {
   ReactIntegration,
   ReactRouterHistory,
 } from '@grafana/faro-react';
-import { Route } from 'react-router-dom';
 import { ReactIntegrationSettings } from '../routerAdapter.ts';
 
-export function initAdapterV4(history: ReactRouterHistory): ReactIntegrationSettings {
+export function initAdapterV4(history: ReactRouterHistory, Route: any): ReactIntegrationSettings {
   return {
     version: 4,
     dependencies: {
