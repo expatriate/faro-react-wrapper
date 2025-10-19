@@ -4,7 +4,7 @@ import { initAdapterV5 } from './adapters/router-v5.ts';
 import { initAdapterV6 } from './adapters/router-v6.ts';
 import { initAdapterV7 } from './adapters/router-v7.ts';
 
-import { detectReactRouterVersion, RouterMajorVersion } from './routerVersionDetector.ts';
+import { RouterMajorVersion } from './routerVersionDetector.ts';
 
 export type ReactIntegrationSettings = {
   adapter: ReactIntegration;
@@ -12,10 +12,8 @@ export type ReactIntegrationSettings = {
   dependencies: Record<string, unknown>;
 };
 
-export function getRouterAdapter(version?: RouterMajorVersion): ReactIntegrationSettings {
-  const detectedRouterVersion = version ? version : detectReactRouterVersion();
-
-  switch (detectedRouterVersion) {
+export function getRouterAdapter(version: RouterMajorVersion): ReactIntegrationSettings {
+  switch (version) {
     case 4:
       return initAdapterV4();
     case 5:
@@ -25,6 +23,6 @@ export function getRouterAdapter(version?: RouterMajorVersion): ReactIntegration
     case 7:
       return initAdapterV7();
     default:
-      throw new Error(`Unsupported React Router version: ${detectedRouterVersion}`);
+      throw new Error(`Unsupported React Router version: ${version}`);
   }
 }
