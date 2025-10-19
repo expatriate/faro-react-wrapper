@@ -13,7 +13,7 @@ export type ReactIntegrationSettings = {
 };
 
 export function getRouterAdapter(version?: RouterMajorVersion): ReactIntegrationSettings {
-  const detectedRouterVersion = version ?? detectReactRouterVersion();
+  const detectedRouterVersion = version ? version : detectReactRouterVersion();
 
   switch (detectedRouterVersion) {
     case 4:
