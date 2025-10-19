@@ -3,12 +3,10 @@ import {
   ReactIntegration,
   ReactRouterHistory,
 } from '@grafana/faro-react';
-import { createBrowserHistory } from 'history';
 import { Route } from 'react-router-dom';
 import { ReactIntegrationSettings } from '../routerAdapter.ts';
 
-export function initAdapterV5(): ReactIntegrationSettings {
-  const history = createBrowserHistory();
+export function initAdapterV5(history: ReactRouterHistory): ReactIntegrationSettings {
   return {
     version: 5,
     dependencies: {
@@ -17,7 +15,7 @@ export function initAdapterV5(): ReactIntegrationSettings {
     },
     adapter: new ReactIntegration({
       router: createReactRouterV5Options({
-        history: history as unknown as ReactRouterHistory,
+        history,
         Route,
       }),
     }),

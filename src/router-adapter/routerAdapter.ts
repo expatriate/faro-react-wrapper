@@ -1,4 +1,4 @@
-import { ReactIntegration } from '@grafana/faro-react';
+import { ReactIntegration, ReactRouterHistory } from '@grafana/faro-react';
 import { initAdapterV4 } from './adapters/router-v4.ts';
 import { initAdapterV5 } from './adapters/router-v5.ts';
 import { initAdapterV6 } from './adapters/router-v6.ts';
@@ -12,12 +12,17 @@ export type ReactIntegrationSettings = {
   dependencies: Record<string, unknown>;
 };
 
-export function getRouterAdapter(version: RouterMajorVersion): ReactIntegrationSettings {
+export function getRouterAdapter(
+  version: RouterMajorVersion,
+  history?: ReactRouterHistory,
+): ReactIntegrationSettings {
   switch (version) {
     case 4:
-      return initAdapterV4();
+      if (history) return initAdapterV4(history);
+      throw new Error(`Router adapter need history to initialize`);
     case 5:
-      return initAdapterV5();
+      if (history) return initAdapterV5(history);
+      throw new Error(`Router adapter need history to initialize`);
     case 6:
       return initAdapterV6();
     case 7:
