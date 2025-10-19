@@ -12,8 +12,8 @@ export type ReactIntegrationSettings = {
   dependencies: Record<string, unknown>;
 };
 
-export function getRouterAdapter(): ReactIntegrationSettings {
-  const detectedRouterVersion = detectReactRouterVersion();
+export function getRouterAdapter(version?: RouterMajorVersion): ReactIntegrationSettings {
+  const detectedRouterVersion = version || detectReactRouterVersion();
 
   switch (detectedRouterVersion) {
     case 4:
