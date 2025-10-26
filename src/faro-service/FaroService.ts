@@ -1,7 +1,6 @@
 import {
   BrowserConfig,
   Faro,
-  getWebInstrumentations,
   initializeFaro,
   MeasurementEvent,
   ReactIntegration,
@@ -51,11 +50,7 @@ export class FaroService {
         ...transports,
       ],
 
-      instrumentations: [
-        ...getWebInstrumentations(),
-        ...(routerAdapter ? [routerAdapter] : []),
-        ...instrumentations,
-      ],
+      instrumentations: [...(routerAdapter ? [routerAdapter] : []), ...instrumentations],
 
       beforeSend: (beacon) => {
         if (!this.sanitizers?.length) return beforeSend?.(beacon) ?? beacon;
